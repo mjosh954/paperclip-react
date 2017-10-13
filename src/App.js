@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import 'semantic-ui-css/semantic.min.css';
 import Manufacturing from './components/Manufacturing';
 import Business from './components/Business';
-import { Grid, Button } from 'semantic-ui-react'
+import { Grid, Button, Statistic, Icon } from 'semantic-ui-react'
 
 class App extends Component {
 
@@ -132,19 +132,25 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <Grid columns={3} padded>
+        <Grid padded>
           <Grid.Row>
-            <Grid.Column>
-              {this.state.inc}
-              <h2>Paperclips: {this.state.totalClipsProduced}</h2>
-              <Button disabled={this.state.wire <= 0} onClick={this._createClip}
-                label={{ basic: true, color: 'blue', pointing: 'left', content: this.state.totalClipsProduced }}
-                icon='attach'
-                color='blue'
-                content='Make a Paperclip' />
+            <Grid.Column width={16} textAlign='center'>
+              <Statistic>
+                <Statistic.Value>
+                  <Icon name='attach' />
+                  {this.state.totalClipsProduced}
+                </Statistic.Value>
+                <Statistic.Label>Produced</Statistic.Label>
+              </Statistic>
+              <div>
+                <Button disabled={this.state.wire <= 0} onClick={this._createClip}
+                  icon='attach'
+                  color='blue'
+                  content='Make a Paperclip' />
+              </div>
             </Grid.Column>
           </Grid.Row>
-          <Grid.Row>
+          <Grid.Row columns={3}>
             <Grid.Column>
               <Business funds={this.state.funds}
                 price={this.state.price}
@@ -156,7 +162,7 @@ class App extends Component {
                 handleBuyAds={this._buyAds} />
             </Grid.Column>
           </Grid.Row>
-          <Grid.Row>
+          <Grid.Row columns={3}>
             <Grid.Column>
               <Manufacturing wire={this.state.wire}
                 funds={this.state.funds}
