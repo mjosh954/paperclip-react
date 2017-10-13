@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import numeral from 'numeral';
+import { Segment, Divider, Button } from 'semantic-ui-react'
 
 export default class Business extends Component {
 	_raisePrice = (e) => {
@@ -13,21 +14,33 @@ export default class Business extends Component {
 	}
 
 	render() {
+		const { funds, inventory, price, demand, adCost, handleBuyAds, marketingLevel } = this.props;
 		return (
-			<div>
+			<Segment raised>
 				<h3>Business</h3>
-				<hr />
-				<div>Available Funds: {numeral(this.props.funds).format('$0,0.00')}</div>
-				<div>Unsold Inventory: {this.props.inventory}</div>
+				<Divider />
+				<div>Available Funds: {numeral(funds).format('$0,0.00')}</div>
+				<div>Unsold Inventory: {inventory}</div>
 				<span>
-					<button disabled={this.props.price <= 0.01} onClick={this._lowerPrice}>lower</button>
-					<button onClick={this._raisePrice}>raise</button>
-					Price per Clip: ${numeral(this.props.price).format('0.00[0000]')}
+
+					<Button.Group size='mini'>
+						<Button disabled={price <= 0.01} onClick={this._lowerPrice} content='lower' />
+						<Button.Or />
+						<Button onClick={this._raisePrice} content='raise' />
+					</Button.Group>
+					 Price per Clip: ${numeral(price).format('0.00[0000]')}
 				</span>
 				<div>
-					Public Demand {numeral(this.props.demand * 10).format()} %
+					Public Demand {numeral(demand * 10).format()} %
 				</div>
-			</div>
+				<br />
+				<div>
+					<span>
+						<Button size='mini' disabled={funds < adCost} onClick={handleBuyAds} content='Marketing' /> Level: {marketingLevel}
+					</span>
+					<div>Cost ${this.props.adCost}</div>
+				</div>
+			</Segment>
 		)
 	}
 }

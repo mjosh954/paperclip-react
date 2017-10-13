@@ -1,22 +1,24 @@
 import React, { Component } from 'react'
+import { Segment, Divider, Button } from 'semantic-ui-react'
 
 export default class Manufacturing extends Component {
 	render() {
+		const { funds, wireCost, handleBuyWire, wire } = this.props;
 		return (
-			<div>
+			<Segment raised>
 				<h3>Manufacturing</h3>
-				<hr />
+				<Divider />
 				<div>
 					<span>
-						<button onClick={this.props.handleBuyWire}>Wire</button> {this.props.wire} inches
+						<Button size='mini' disabled={funds < wireCost} onClick={handleBuyWire} content='Wire' /> {wire}
 					</span>
 				</div>
 				<div>
 					<span>
-						Cost: {this.props.wireCost}
+						Cost: {wireCost}
 					</span>
 				</div>
-			</div>
+			</Segment>
 		)
 	}
 }
