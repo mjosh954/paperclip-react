@@ -26,16 +26,26 @@ class App extends Component {
     adCost: 100,
     demandBoost: 1,
     prestigeU: 0,
-    time: 0
+    time: 0,
+    milestoneCount: 0,
+    autoClipperCost: 5.00,
+    numAutoClippersOwned: 0,
+    showAutoClippers: false
   }
 
   componentDidMount() {
     const loopId = setInterval(this._gameLoop, 100)
-    this.setState({ loopId: loopId });
+    const mileStoneLoopId = setInterval(this._milestoneLoop, 10);
+    this.setState({ 
+      gameLoopId: loopId,
+      mileStoneLoopId: mileStoneLoopId 
+  });
+    
   }
 
   componentWillUnmount() {
-    clearInterval(this.state.loopId);
+    clearInterval(this.state.gameLoopId);
+    clearInterval(this.state.mileStoneLoopId);
   }
 
   _gameLoop = () => {
@@ -46,6 +56,15 @@ class App extends Component {
       this._sellClips(toSell);
     }
     this._calculateDemand();
+  }
+
+  _milestoneLoop = () => {
+    if(this.state.milestoneCount === 0 && this.state.funds >= 5) {
+      this.setState({ 
+        milestoneCount: this.state.milestoneCount + 1,
+        showAutoClippers: true
+      });
+    }
   }
 
   _calculateDemand = () => {
@@ -167,7 +186,9 @@ class App extends Component {
               <Manufacturing wire={this.state.wire}
                 funds={this.state.funds}
                 handleBuyWire={this._buyWire}
-                wireCost={this.state.wireCost} />
+                wireCost={this.state.wireCost}
+                numAutoClippersOwned={this.state.numAutoClippersOwned}
+                autoClipperCost={this.state.autoClipperCost} />
             </Grid.Column>
           </Grid.Row>
         </Grid>

@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import numeral from 'numeral';
 import { Segment, Divider, Button } from 'semantic-ui-react'
+import Marketing from './Marketing';
+import './Business.css';
 
 export default class Business extends Component {
 	_raisePrice = (e) => {
@@ -22,24 +24,17 @@ export default class Business extends Component {
 				<div>Available Funds: {numeral(funds).format('$0,0.00')}</div>
 				<div>Unsold Inventory: {inventory}</div>
 				<span>
-
 					<Button.Group size='mini'>
 						<Button disabled={price <= 0.01} onClick={this._lowerPrice} content='lower' />
 						<Button.Or />
 						<Button onClick={this._raisePrice} content='raise' />
 					</Button.Group>
-					 Price per Clip: ${numeral(price).format('0.00[0000]')}
+					Price per Clip: ${numeral(price).format('0.00[0000]')}
 				</span>
 				<div>
 					Public Demand {numeral(demand * 10).format()} %
 				</div>
-				<br />
-				<div>
-					<span>
-						<Button size='mini' disabled={funds < adCost} onClick={handleBuyAds} content='Marketing' /> Level: {marketingLevel}
-					</span>
-					<div>Cost ${this.props.adCost}</div>
-				</div>
+				<Marketing disabled={funds < adCost} onUpgrade={handleBuyAds} cost={adCost} level={marketingLevel} />
 			</Segment>
 		)
 	}
