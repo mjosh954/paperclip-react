@@ -1,9 +1,9 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { Button } from 'semantic-ui-react'
 
-export default class WireStore extends Component {
+export default class WireStore extends PureComponent {
 	render () {
-		const { funds, wireCost, wireAmount, handleBuyWire, disabled } = this.props;
+		const { wireCost, wireAmount, handleBuyWire, disabled } = this.props;
 		return (
 			<div className='wireStore'>
 				<span>

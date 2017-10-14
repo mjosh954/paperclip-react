@@ -7,6 +7,7 @@ import { Grid, Button, Statistic, Icon } from 'semantic-ui-react'
 class App extends Component {
 
   state = {
+    tick: 0,
     wire: 1000,
     inventory: 0,
     clipsSold: 0,
@@ -34,21 +35,20 @@ class App extends Component {
   }
 
   componentDidMount() {
-    const loopId = setInterval(this._gameLoop, 100)
-    const mileStoneLoopId = setInterval(this._milestoneLoop, 10);
-    this.setState({ 
-      gameLoopId: loopId,
-      mileStoneLoopId: mileStoneLoopId 
-  });
-    
+    const slowGameLoop = setInterval(this._slowGameLoop, 100)
+    const mainLoop = setInterval(this._mainLoop, 10);
+    this.setState({
+      slowGameLoop: slowGameLoop,
+      mailLoop: mainLoop
+    });
   }
 
   componentWillUnmount() {
-    clearInterval(this.state.gameLoopId);
-    clearInterval(this.state.mileStoneLoopId);
+    clearInterval(this.state.slowGameLoop);
+    clearInterval(this.state.mainLoop);
   }
 
-  _gameLoop = () => {
+  _slowGameLoop = () => {
     this.setState({ time: this.state.time + 1, wirePriceTimer: this.state.wirePriceTimer + 1 })
     this._adjustWirePrice();
     if (this.state.inventory > 0 && Math.random() < (this.state.demand / 100)) {
@@ -58,9 +58,15 @@ class App extends Component {
     this._calculateDemand();
   }
 
-  _milestoneLoop = () => {
-    if(this.state.milestoneCount === 0 && this.state.funds >= 5) {
-      this.setState({ 
+  _mainLoop = () => {
+    this.setState({ tick: this.state.tick + 1 })
+    this._milestoneCheck();
+    
+  }
+
+  _milestoneCheck = () => {
+    if (this.state.milestoneCount === 0 && this.state.funds >= 5) {
+      this.setState({
         milestoneCount: this.state.milestoneCount + 1,
         showAutoClippers: true
       });
@@ -146,6 +152,16 @@ class App extends Component {
     }
   }
 
+  _buyAutoClipper = () => {
+    if (this.state.funds > this.state.autoClipperCost) {
+      this.setState({
+        funds: this.state.funds - this.state.autoClipperCost,
+        numAutoClippersOwned: this.state.numAutoClippersOwned + 1,
+        autoClipperCost: this.state.autoClipperCost * 2
+      });
+    }
+  }
+
   _adjustPrice = newPrice => this.setState({ price: newPrice });
 
   render() {
@@ -188,7 +204,9 @@ class App extends Component {
                 handleBuyWire={this._buyWire}
                 wireCost={this.state.wireCost}
                 numAutoClippersOwned={this.state.numAutoClippersOwned}
-                autoClipperCost={this.state.autoClipperCost} />
+                autoClipperCost={this.state.autoClipperCost}
+                handleBuyAutoClipper={this._buyAutoClipper}
+                showAutoClippers={this.state.showAutoClippers} />
             </Grid.Column>
           </Grid.Row>
         </Grid>
