@@ -17,7 +17,7 @@ export default class Manufacturing extends Component {
 	}
 
 	render() {
-		const { funds, wireCost, handleBuyWire, wire, autoClipperCost, numAutoClippersOwned } = this.props;
+		const { funds, wireCost, handleBuyWire, wire } = this.props;
 
 		return (
 			<Segment raised className='manufacturing'>

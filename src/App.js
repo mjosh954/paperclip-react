@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import 'semantic-ui-css/semantic.min.css';
+import numeral from 'numeral';
 import Manufacturing from './components/Manufacturing';
 import Business from './components/Business';
 import { Grid, Button, Statistic, Icon } from 'semantic-ui-react'
@@ -61,7 +62,6 @@ class App extends Component {
   _mainLoop = () => {
     this.setState({ tick: this.state.tick + 1 })
     this._milestoneCheck();
-    
   }
 
   _milestoneCheck = () => {
@@ -87,7 +87,7 @@ class App extends Component {
       const transaction = (Math.floor((this.state.inventory * this.state.price) * 1000)) / 1000;
       this.setState({
         transaction: transaction,
-        funds: (Math.floor((this.state.funds + transaction) * 100)) / 100,
+        funds: Math.floor((this.state.funds + transaction) * 100) / 100,
         income: this.state.income + transaction,
         clipsSold: this.state.clipsSold + this.state.inventory,
         inventory: 0
@@ -95,7 +95,7 @@ class App extends Component {
     } else {
       const transaction = (Math.floor((number * this.state.price) * 1000)) / 1000;
       this.setState({
-        funds: (Math.floor((this.state.funds + transaction) * 100)) / 100,
+        funds: Math.floor((this.state.funds + transaction) * 100) / 100,
         income: this.state.income + transaction,
         clipsSold: this.state.clipsSold + number,
         inventory: this.state.inventory - number
@@ -144,7 +144,7 @@ class App extends Component {
 
     if (Math.random() < 0.015) {
       const updatedCount = this.state.wirePriceCounter + 1;
-      const wireAdjust = 6 * (Math.sin(updatedCount));
+      const wireAdjust = 6 * Math.sin(updatedCount);
       this.setState({
         wirePriceCounter: updatedCount,
         wireCost: Math.ceil(this.state.wireBasePrice + wireAdjust)
@@ -153,11 +153,11 @@ class App extends Component {
   }
 
   _buyAutoClipper = () => {
-    if (this.state.funds > this.state.autoClipperCost) {
+    if (this.state.funds >= this.state.autoClipperCost) {
       this.setState({
         funds: this.state.funds - this.state.autoClipperCost,
         numAutoClippersOwned: this.state.numAutoClippersOwned + 1,
-        autoClipperCost: this.state.autoClipperCost * 2
+        autoClipperCost: Math.pow(1.1, this.state.autoClipperCost) + 5
       });
     }
   }
@@ -165,6 +165,7 @@ class App extends Component {
   _adjustPrice = newPrice => this.setState({ price: newPrice });
 
   render() {
+    const formattedTotalClips = numeral(this.state.totalClipsProduced).format('0,0');
     return (
       <div className="App">
         <Grid padded>
@@ -172,8 +173,7 @@ class App extends Component {
             <Grid.Column width={16} textAlign='center'>
               <Statistic>
                 <Statistic.Value>
-                  <Icon name='attach' />
-                  {this.state.totalClipsProduced}
+                  <Icon name='attach' />{formattedTotalClips}
                 </Statistic.Value>
                 <Statistic.Label>Produced</Statistic.Label>
               </Statistic>
